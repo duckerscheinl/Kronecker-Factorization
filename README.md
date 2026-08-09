@@ -52,9 +52,7 @@ together instead of the two indices of the same type:
 R_{(r_{\mathrm L} c_{\mathrm L}),\,(r_{\mathrm R} c_{\mathrm R})} \;:=\; M_{(r_{\mathrm L} r_{\mathrm R}),\,(c_{\mathrm L} c_{\mathrm R})} .
 ```
 
-In the sketch this is the "lookup representation": the row label $|a{\times}b|$ stands for the
-basis operator $|a\rangle\langle b|$ of the left site, the column label for the same on the
-right site. The coloured arrows track where each of the 16 entries is sent. The result is
+So R becomes
 
 ```math
 R =
@@ -85,35 +83,6 @@ v^{\dagger} \;\propto\; (1,0,0,-1) \;\hat{=}\; \sigma_z .
 The rank of $R$ — not of $M$ — is the operator Schmidt rank. For $\sigma_x \otimes \sigma_z$ it is 1;
 for $\sigma_x \otimes \sigma_z + \sigma_z \otimes \sigma_x$ it is 2, and so on.
 
-## Reference implementation
-
-```python
-import numpy as np
-
-def realign(M, dA=2, dB=2):
-    """M[(iA iB), (jA jB)]  ->  R[(iA jA), (iB jB)]"""
-    return (M.reshape(dA, dB, dA, dB)     # iA iB jA jB
-             .transpose(0, 2, 1, 3)       # iA jA iB jB
-             .reshape(dA * dA, dB * dB))
-
-def tensor_terms(M, dA=2, dB=2, tol=1e-12):
-    """Return lists A, B with  M = sum_k kron(A[k], B[k])."""
-    U, s, Vh = np.linalg.svd(realign(M, dA, dB))
-    r = int((s > tol * max(s[0], 1.0)).sum())
-    A = [np.sqrt(s[k]) * U[:, k].reshape(dA, dA) for k in range(r)]
-    B = [np.sqrt(s[k]) * Vh[k, :].reshape(dB, dB) for k in range(r)]
-    return A, B
-```
-
-```python
-sx = np.array([[0, 1], [1, 0]])
-sz = np.array([[1, 0], [0, -1]])
-
-A, B = tensor_terms(np.kron(sx, sz))
-len(A)                                            # -> 1, the Schmidt rank
-np.allclose(sum(np.kron(a, b) for a, b in zip(A, B)), np.kron(sx, sz))   # -> True
-```
-
 ## Notes and conventions
 
 - **Index ordering.** Big-endian throughout: the composite index is $2 r_{\mathrm L} + r_{\mathrm R}$, so the
@@ -121,19 +90,15 @@ np.allclose(sum(np.kron(a, b) for a, b in zip(A, B)), np.kron(sx, sz))   # -> Tr
   `numpy.kron` and the C ordering of `reshape`; a column-major convention swaps the roles
   of the two bits and transposes $R$.
 - **Normalisation.** The sketch writes the middle factor as $1$ and keeps the singular
-  vectors unnormalised. With unit-norm $u$ and $v$ the singular value is
-  $\lVert\mathrm{vec}\,\sigma_x\rVert \cdot \lVert\mathrm{vec}\,\sigma_z\rVert = \sqrt{2}\cdot\sqrt{2} = 2$,
-  and $u = (0,1,1,0)^{\mathsf T}/\sqrt 2$, $v = (1,0,0,-1)^{\mathsf T}/\sqrt 2$. Splitting $\sqrt{s_k}$ onto
-  each side, as the code does, is the symmetric choice; how the scalar is distributed
-  between $A_k$ and $B_k$ is pure gauge.
+  vectors unnormalised. With unit-norm $u$ and $v$ the singular value is $s_k=2$,
+  and $u = (0,1,1,0)^{\mathsf T}/\sqrt 2$, $v = (1,0,0,-1)^{\mathsf T}/\sqrt 2$. 
+  How the singular value is distributed or if it is kept as a coefficient is of no significance.
 - **Sign/phase gauge.** The pair $(A_k, B_k)$ is fixed only up to $(e^{i\theta}A_k, e^{-i\theta}B_k)$.
   LAPACK will happily return $(-\sigma_x, -\sigma_z)$ instead of $(\sigma_x, \sigma_z)$; the product is the same.
 - **Realignment is a permutation, not a similarity transform.** It does not preserve the
   spectrum of $M$, only its Frobenius norm, $\lVert R\rVert_F = \lVert M\rVert_F = \sqrt{\sum_k s_k^2}$.
   So the singular values of $R$ say nothing about the eigenvalues of $M$ — they measure how
   entangled the *operator* is across the bond.
-- **Complex entries.** The SVD hands back $v_k^{\dagger}$, i.e. the conjugated row of `Vh`. Reshape
-  that row directly, as above; do not conjugate it a second time.
 - **More than two sites.** Apply the same reshuffle-and-SVD at each bond, sweeping
   left to right and carrying the remainder $s\,V^{\dagger}$ into the next site. The retained
   singular values at each cut are the MPO bond dimensions, and truncating small ones
@@ -143,10 +108,7 @@ np.allclose(sum(np.kron(a, b) for a, b in zip(A, B)), np.kron(sx, sz))   # -> Tr
 
 | File | Description |
 |---|---|
-| `figure.png` | Diagram above, raster (300 dpi) |
-| `figure.svg` | Same diagram, vector |
-| `figure.pdf` | Same diagram, vector — drop straight into LaTeX with `\includegraphics` |
-| `figure.tex` | TikZ source (`standalone`, compiles with `pdflatex`) |
+| `figure.png` | Diagram above |
 | `sketch.png` | Original hand-drawn derivation (cleaned scan) |
 
 The hand-drawn original, for reference:
