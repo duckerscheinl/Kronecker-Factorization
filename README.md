@@ -16,7 +16,7 @@ The trick is that the decomposition is not obtained from the spectrum of $M$, bu
 
 ## The construction
 
-![Index realignment and SVD, worked through for sigma_x tensor sigma_z](figure.png)
+![Index realignment and SVD, worked through for sigma_x tensor sigma_z](./Images/figure.png)
 
 The four colours are the four $2\times2$ blocks of $M$: each block corresponds to one
 value of the left-site index pair $(r_{\mathrm L}, c_{\mathrm L})$ and becomes one row of $R$.
@@ -151,4 +151,4 @@ np.allclose(sum(np.kron(a, b) for a, b in zip(A, B)), np.kron(sx, sz))   # -> Tr
 
 The hand-drawn original, for reference:
 
-![Original handwritten derivation](sketch.png)
+![Original handwritten derivation](./Images/sketch.png)
