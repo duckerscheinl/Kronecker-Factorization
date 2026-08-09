@@ -3,7 +3,9 @@
 Given an operator $M$ acting on two sites, we want to write it as a sum of tensor
 products of single-site operators,
 
-$$M \;=\; \sum_{k} A_k \otimes B_k ,$$
+```math
+M \;=\; \sum_{k} A_k \otimes B_k ,
+```
 
 with as few terms as possible. This is the *operator Schmidt decomposition*, and it is
 the elementary step behind building an MPO from a dense operator: the number of terms
@@ -14,7 +16,7 @@ The trick is that the decomposition is not obtained from the spectrum of $M$, bu
 
 ## The construction
 
-![Index realignment and SVD, worked through for sigma_x tensor sigma_z](./Images/figure.png)
+![Index realignment and SVD, worked through for sigma_x tensor sigma_z](figure.png)
 
 The four colours are the four $2\times2$ blocks of $M$: each block corresponds to one
 value of the left-site index pair $(r_{\mathrm L}, c_{\mathrm L})$ and becomes one row of $R$.
@@ -23,7 +25,7 @@ Read the sketch in four steps.
 
 **1. Start from the dense matrix.** For $\sigma_x \otimes \sigma_z$,
 
-$$
+```math
 \sigma_x \otimes \sigma_z =
 \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} \otimes
 \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} =
@@ -33,24 +35,28 @@ $$
 1 & 0 & 0 & 0 \\
 0 & -1 & 0 & 0
 \end{pmatrix}.
-$$
+```
 
 **2. Read the composite indices in binary.** Each row index is a ket $|r_{\mathrm L} r_{\mathrm R}\rangle$
 and each column index a bra $\langle c_{\mathrm L} c_{\mathrm R}|$, the left bit belonging to the
 first site and the right bit to the second:
 
-$$M_{(r_{\mathrm L} r_{\mathrm R}),\,(c_{\mathrm L} c_{\mathrm R})} = A_{r_{\mathrm L} c_{\mathrm L}} \, B_{r_{\mathrm R} c_{\mathrm R}} .$$
+```math
+M_{(r_{\mathrm L} r_{\mathrm R}),\,(c_{\mathrm L} c_{\mathrm R})} = A_{r_{\mathrm L} c_{\mathrm L}} \, B_{r_{\mathrm R} c_{\mathrm R}} .
+```
 
 **3. Realign.** Regroup the four bits so that the two indices of the *same site* sit
 together instead of the two indices of the same type:
 
-$$R_{(r_{\mathrm L} c_{\mathrm L}),\,(r_{\mathrm R} c_{\mathrm R})} \;:=\; M_{(r_{\mathrm L} r_{\mathrm R}),\,(c_{\mathrm L} c_{\mathrm R})} .$$
+```math
+R_{(r_{\mathrm L} c_{\mathrm L}),\,(r_{\mathrm R} c_{\mathrm R})} \;:=\; M_{(r_{\mathrm L} r_{\mathrm R}),\,(c_{\mathrm L} c_{\mathrm R})} .
+```
 
 In the sketch this is the "lookup representation": the row label $|a{\times}b|$ stands for the
 basis operator $|a\rangle\langle b|$ of the left site, the column label for the same on the
 right site. The coloured arrows track where each of the 16 entries is sent. The result is
 
-$$
+```math
 R =
 \begin{pmatrix}
 0 & 0 & 0 & 0 \\
@@ -58,19 +64,23 @@ R =
 1 & 0 & 0 & -1 \\
 0 & 0 & 0 & 0
 \end{pmatrix},
-$$
+```
 
-which is nothing but $\operatorname{vec}(\sigma_x)\,\operatorname{vec}(\sigma_z)^{\mathsf T}$.
+which is nothing but $\mathrm{vec}(\sigma_x)\,\mathrm{vec}(\sigma_z)^{\mathsf T}$.
 
 **4. SVD.** $R = \sum_k s_k\, u_k v_k^{\dagger}$, and each singular vector reshapes back into a
 $2\times2$ single-site operator:
 
-$$A_k = \sqrt{s_k}\,\operatorname{vec}^{-1}(u_k), \qquad B_k = \sqrt{s_k}\,\operatorname{vec}^{-1}(v_k^{\dagger}).$$
+```math
+A_k = \sqrt{s_k}\,\mathrm{vec}^{-1}(u_k), \qquad B_k = \sqrt{s_k}\,\mathrm{vec}^{-1}(v_k^{\dagger}).
+```
 
 Here $R$ has rank 1, so a single term survives, and it returns the factors we started with:
 
-$$u \;\propto\; (0,1,1,0)^{\mathsf T} \;\hat{=}\; \sigma_x, \qquad
-v^{\dagger} \;\propto\; (1,0,0,-1) \;\hat{=}\; \sigma_z .$$
+```math
+u \;\propto\; (0,1,1,0)^{\mathsf T} \;\hat{=}\; \sigma_x, \qquad
+v^{\dagger} \;\propto\; (1,0,0,-1) \;\hat{=}\; \sigma_z .
+```
 
 The rank of $R$ — not of $M$ — is the operator Schmidt rank. For $\sigma_x \otimes \sigma_z$ it is 1;
 for $\sigma_x \otimes \sigma_z + \sigma_z \otimes \sigma_x$ it is 2, and so on.
@@ -112,7 +122,7 @@ np.allclose(sum(np.kron(a, b) for a, b in zip(A, B)), np.kron(sx, sz))   # -> Tr
   of the two bits and transposes $R$.
 - **Normalisation.** The sketch writes the middle factor as $1$ and keeps the singular
   vectors unnormalised. With unit-norm $u$ and $v$ the singular value is
-  $\lVert\operatorname{vec}\sigma_x\rVert \cdot \lVert\operatorname{vec}\sigma_z\rVert = \sqrt{2}\cdot\sqrt{2} = 2$,
+  $\lVert\mathrm{vec}\,\sigma_x\rVert \cdot \lVert\mathrm{vec}\,\sigma_z\rVert = \sqrt{2}\cdot\sqrt{2} = 2$,
   and $u = (0,1,1,0)^{\mathsf T}/\sqrt 2$, $v = (1,0,0,-1)^{\mathsf T}/\sqrt 2$. Splitting $\sqrt{s_k}$ onto
   each side, as the code does, is the symmetric choice; how the scalar is distributed
   between $A_k$ and $B_k$ is pure gauge.
@@ -141,4 +151,4 @@ np.allclose(sum(np.kron(a, b) for a, b in zip(A, B)), np.kron(sx, sz))   # -> Tr
 
 The hand-drawn original, for reference:
 
-![Original handwritten derivation](./Images/sketch.png)
+![Original handwritten derivation](sketch.png)
