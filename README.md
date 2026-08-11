@@ -107,12 +107,18 @@ for $\sigma_x \otimes \sigma_z + \sigma_z \otimes \sigma_x$ it is 2, and so on.
 
 ## Step-by-step installation
 
-Install dependencies via pip install -r requirements.txt
+Install dependencies 
+
+'''bash
+pip install -r requirements.txt
+'''
 
 then adjust .git/hooks/ by executing
 
+'''bash
 chmod +x .githooks/pre-push
 git config core.hooksPath .githooks
+'''
 
 
 ## Files
