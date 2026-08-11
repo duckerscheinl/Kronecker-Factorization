@@ -16,7 +16,7 @@ The trick is that the decomposition is not obtained from the spectrum of $M$, bu
 
 ## The construction
 
-![Index realignment and SVD, worked through for sigma_x tensor sigma_z](./Images/figure.png)
+![Index realignment and SVD, worked through for sigma_x tensor sigma_z](./images/figure.png)
 
 The four colours are the four $2\times2$ blocks of $M$: each block corresponds to one
 value of the left-site index pair $(r_{\mathrm L}, c_{\mathrm L})$ and becomes one row of $R$.
@@ -113,4 +113,4 @@ for $\sigma_x \otimes \sigma_z + \sigma_z \otimes \sigma_x$ it is 2, and so on.
 
 The hand-drawn original, for reference:
 
-![Original handwritten derivation](./Images/sketch.png)
+![Original handwritten derivation](./images/sketch.png)
