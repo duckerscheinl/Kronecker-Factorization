@@ -1,0 +1,11 @@
+# Ignore everything at the top level ...
+/*
+
+# ... except these
+!.gitignore
+!images/
+!tests/
+!src/
+!requirements.txt
+!README.md
+!LICENSE
