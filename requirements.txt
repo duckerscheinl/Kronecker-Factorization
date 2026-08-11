@@ -1,0 +1,6 @@
+# runtime
+numpy>=1.24
+sympy>=1.12
+
+# testing
+pytest>=7.4

@@ -4,9 +4,9 @@
 # ... except these
 !.gitignore
 !images/
-!tests/
-!src/
+*.py
 !requirements.txt
 !README.md
 !LICENSE
 !pytest.ini
+
