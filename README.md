@@ -16,7 +16,7 @@ The trick is that the decomposition is not obtained from the spectrum of $M$, bu
 
 ## The construction
 
-![Index realignment and SVD, worked through for sigma_x tensor sigma_z](./images/figure.png)
+![Index realignment and SVD, worked through for sigma_x tensor sigma_z](./images/matrix-lookup-table.png)
 
 The four colours are the four $2\times2$ blocks of $M$: each block corresponds to one
 value of the left-site index pair $(r_{\mathrm L}, c_{\mathrm L})$ and becomes one row of $R$.
@@ -99,10 +99,13 @@ for $\sigma_x \otimes \sigma_z + \sigma_z \otimes \sigma_x$ it is 2, and so on.
   spectrum of $M$, only its Frobenius norm, $\lVert R\rVert_F = \lVert M\rVert_F = \sqrt{\sum_k s_k^2}$.
   So the singular values of $R$ say nothing about the eigenvalues of $M$ — they measure how
   entangled the *operator* is across the bond.
-- **More than two sites.** Apply the same reshuffle-and-SVD at each bond, sweeping
-  left to right and carrying the remainder $s\,V^{\dagger}$ into the next site. The retained
-  singular values at each cut are the MPO bond dimensions, and truncating small ones
-  gives a controlled approximate MPO.
+
+## More than two sites
+
+This scenario is implemented in the full Kronecker factorization. The function builds a tre recursively, where each
+path from a leaf to the root defines one term. The drawing illustrates an example: 
+
+![Claude Kronecker-tree](./images/kron-tree.png)
 
 
 ## Step-by-step installation
@@ -125,9 +128,12 @@ git config core.hooksPath .githooks
 
 | File | Description |
 |---|---|
-| `figure.png` | Diagram above |
-| `sketch.png` | Original hand-drawn derivation (cleaned scan) |
+| `matrix-loopup-table.png` | Illustrative Example: How to find Kronecker factorization |
+| `sketch-matrix-loopup-table.png` | Original hand-drawn version |
+| `kron-tree.png` | Illustrative Example of a "Kronecker-Tree" |
+| `sketch-kron-tree.png` | Original hand-drawn version |
 
-The hand-drawn original, for reference:
+The hand-drawn originals, for reference:
 
-![Original handwritten derivation](./images/sketch.png)
+![Original handwritten derivation](./images/sketch-matrix-lookup-table.png)
+![Original Kronecker-tree sketch](./images/sketch-kron-tree.png)
