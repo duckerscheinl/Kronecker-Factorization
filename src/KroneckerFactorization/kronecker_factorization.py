@@ -105,24 +105,3 @@ def full_kronecker_factorization(matrix) -> KroneckerTree:
     recursive_kronecker_factorization(matrix=matrix, parent_id=0, tree=tree)
 
     return tree
-
-
-def test():
-    px = np.array([[0,1],[1,0]])
-    pz = np.array([[1,0],[0,-1]])
-
-    pxx = np.array([[1,0,0,1],[0,-1,1,0],[0,1,-1,0],[1,0,0,1]])
-    pxx_tree = full_kronecker_factorization(pxx)
-    pxx_tree.print_terms()
-
-    matrix = np.kron(np.kron(px,px),px)
-    matrix += np.kron(np.kron(pz,px),pz)
-    matrix += np.kron(np.kron(px,pz),pz)
-    matrix_tree = full_kronecker_factorization(matrix)
-    matrix_tree.print_terms()
-    print(matrix_tree.n)
-    print(np.allclose(matrix_tree.get_matrix(),matrix))
-
-
-if __name__ == "__main__":
-    test()
