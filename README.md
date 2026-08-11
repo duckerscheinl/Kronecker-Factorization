@@ -104,6 +104,17 @@ for $\sigma_x \otimes \sigma_z + \sigma_z \otimes \sigma_x$ it is 2, and so on.
   singular values at each cut are the MPO bond dimensions, and truncating small ones
   gives a controlled approximate MPO.
 
+
+## Step-by-step installation
+
+Install dependencies via pip install -r requirements.txt
+
+then adjust .git/hooks/ by executing
+
+chmod +x .githooks/pre-push
+git config core.hooksPath .githooks
+
+
 ## Files
 
 | File | Description |
